@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 <template>
   <v-container>
     <v-row class="text-center">
@@ -9,143 +10,104 @@
           height="200"
         />
       </v-col>
+    </v-row>
 
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
-        </h1>
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br>please join our online
-          <a
-            href="https://community.vuetifyjs.com"
-            target="_blank"
-          >Discord Community</a>
-        </p>
+    <v-row>
+      <v-col
+      class="col-12 col-sm-6">
+        <v-select
+          :items="states"
+          v-model="stateValueObj"
+          label="label"
+          item-text="nome"
+          return-object
+        >
+        </v-select>
       </v-col>
 
       <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          What's next?
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Important Links
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Ecosystem
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
+      class="col-12 col-sm-6">
+        <v-select
+          :items="cities"
+          v-model="cityValueObj"
+          label="label"
+          item-text="nome"
+          return-object
+        >
+        </v-select>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-  export default {
-    name: 'HelloWorld',
+import axios from 'axios';
 
-    data: () => ({
-      ecosystem: [
-        {
-          text: 'vuetify-loader',
-          href: 'https://github.com/vuetifyjs/vuetify-loader',
-        },
-        {
-          text: 'github',
-          href: 'https://github.com/vuetifyjs/vuetify',
-        },
-        {
-          text: 'awesome-vuetify',
-          href: 'https://github.com/vuetifyjs/awesome-vuetify',
-        },
-      ],
-      importantLinks: [
-        {
-          text: 'Documentation',
-          href: 'https://vuetifyjs.com',
-        },
-        {
-          text: 'Chat',
-          href: 'https://community.vuetifyjs.com',
-        },
-        {
-          text: 'Made with Vuetify',
-          href: 'https://madewithvuejs.com/vuetify',
-        },
-        {
-          text: 'Twitter',
-          href: 'https://twitter.com/vuetifyjs',
-        },
-        {
-          text: 'Articles',
-          href: 'https://medium.com/vuetify',
-        },
-      ],
-      whatsNext: [
-        {
-          text: 'Explore components',
-          href: 'https://vuetifyjs.com/components/api-explorer',
-        },
-        {
-          text: 'Select a layout',
-          href: 'https://vuetifyjs.com/getting-started/pre-made-layouts',
-        },
-        {
-          text: 'Frequently Asked Questions',
-          href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions',
-        },
-      ],
-    }),
-  }
+export default {
+  name: 'HelloWorld',
+
+  data: () => ({
+    states: '',
+    stateValueObj: '',
+    statesName: [],
+    cities: '',
+    cityValueObj: '',
+    citiesName: [],
+    covid: '',
+  }),
+  mounted() {
+    this.getStates();
+
+    this.getBrazilCases();
+  },
+
+  watch: {
+    stateValueObj() {
+      this.getCity();
+    },
+    cityValueObj() {
+      this.getCovid();
+    },
+  },
+  methods: {
+    getStates() {
+      const url = 'https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome';
+      axios
+        .get(url)
+      // eslint-disable-next-line no-return-assign
+        .then((response) => {
+          this.states = response.data;
+        });
+    },
+
+    getBrazilCases() {
+      const url = 'https://covid19-brazil-api.now.sh/api/report/v1/brazil';
+      axios
+        .get(url)
+      // eslint-disable-next-line no-return-assign
+        .then((response) => {
+          this.covid = response.data.data;
+        });
+    },
+
+    getCity() {
+      const url = `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${this.stateValueObj.id}/municipios`;
+      axios
+        .get(url)
+        .then((response) => {
+          this.cities = response.data;
+        });
+    },
+
+    getCovid() {
+      alert('oi');
+      const url = `https://covid19-brazil-api.now.sh/api/report/v1/brazil/uf/${this.stateValueObj.sigla}`;
+      axios
+        .get(url)
+        .then((response) => {
+          this.covid = response.data;
+        });
+    },
+  },
+};
 </script>
