@@ -45,60 +45,88 @@
     <v-row class="d-flex justify-center">
       <v-card id="card-img"
       class="teal lighten-4 mb-3">
-        <v-card-title dark class="teal darken-4 white--text text-h3"
+        <v-card-title dark
+        class="teal darken-4 white--text text-h3"
         primary-title>
-        
+
           {{title}}
         </v-card-title>
 
         <div id="cont">
           <v-img :src="mapUrl" id="map"
-          class="" alt="" srcset="">
-            <v-col cols="12" id="text3" class="d-flex justify-center"
+            class="" alt="" srcset="">
+            <v-col cols="12"
+            id="text3"
+            class="d-flex justify-center"
               v-if="covidState === '' && RegiaoCases.length === 0">
-              <p class="hidden-xs-only display-2 font-weight-black red--text">Confirmados {{covid.confirmed}}</p>
-              <p class="hidden-sm-and-up text-h5 font-weight-black red--text " id="text4">Confirmados {{covid.confirmed}}</p>
+              <p class="hidden-xs-only display-2 font-weight-black red--text">
+                Confirmados {{covid.confirmed}}
+              </p>
+              <p class="hidden-sm-and-up text-h5 font-weight-black red--text " id="text4">
+                Confirmados {{covid.confirmed}}
+              </p>
             </v-col>
           </v-img>
 
-      <v-card-text class="teal lighten-1 mt-3" style="height:12px">
-        <v-card class="teal darken-4 pb-2" style="height:15px">
-          
-        </v-card>
-        <v-row>
-          <v-expand-x-transition>
-          <v-col id="text1"
-           v-show="expand"
-          height="100"
-          width="100"
-          class="mx-auto ">
-            <p class="title teal darken-4 white--text pl-4">Casos</p>
-            <p class="title red--text font-weight-black pl-4" v-if="covidState ==='' && sumOfCasesByRegiao === 0">{{covid.cases}}</p>
-            <p class="title red--text font-weight-black pl-4" v-if="sumOfCasesByRegiao === 0">{{covidState.cases}}</p>
-            <p class="title red--text font-weight-black pl-4" v-if="sumOfCasesByRegiao != 0"> {{sumOfCasesByRegiao}}</p>
-          </v-col>
-          </v-expand-x-transition>
+          <v-card-text
+          class="teal lighten-1 mt-3"
+          style="height:12px">
+            <v-card
+            class="teal darken-4 pb-2"
+            style="height:15px">
+            </v-card>
 
-          <v-expand-x-transition>
-          <v-col id="text2"
-          v-show="expand"
-          height="100"
-          width="100"
-          class="mx-auto ">
-            <p class="title teal darken-4 white--text pl-4" >Mortes</p>
-            <p class="title red--text font-weight-black pl-4" v-if="covidState === '' && sumOfCasesByRegiao === 0">{{covid.deaths}}</p>
-            <p class="title red--text font-weight-black pl-4" v-if="sumOfDeathsByRegiao === 0">{{covidState.deaths }}</p>
-            <p class="title red--text font-weight-black pl-4" v-if="sumOfDeathsByRegiao != 0">{{sumOfDeathsByRegiao}} </p>
-          </v-col>
-          </v-expand-x-transition>
-          </v-row>
-        </v-card-text>
+            <v-row>
+              <v-expand-x-transition>
+                <v-col id="text1"
+                v-show="expand"
+                height="100"
+                width="100"
+                class="mx-auto ">
+                  <p class="title teal darken-4 white--text pl-4">Casos</p>
+                  <p class="title red--text font-weight-black pl-4"
+                  v-if="covidState ==='' && sumOfCasesByRegiao === 0">
+                    {{covid.cases}}
+                  </p>
+                  <p class="title red--text font-weight-black pl-4"
+                  v-if="sumOfCasesByRegiao === 0">
+                    {{covidState.cases}}
+                  </p>
+                  <p class="title red--text font-weight-black pl-4"
+                  v-if="sumOfCasesByRegiao != 0">
+                    {{sumOfCasesByRegiao}}
+                  </p>
+                </v-col>
+              </v-expand-x-transition>
+
+              <v-expand-x-transition>
+                <v-col id="text2"
+                v-show="expand"
+                height="100"
+                width="100"
+                class="mx-auto ">
+                  <p class="title teal darken-4 white--text pl-4" >
+                    Mortes
+                    </p>
+                  <p class="title red--text font-weight-black pl-4"
+                  v-if="covidState === '' && sumOfCasesByRegiao === 0">
+                    {{covid.deaths}}
+                  </p>
+                  <p class="title red--text font-weight-black pl-4"
+                  v-if="sumOfDeathsByRegiao === 0">
+                    {{covidState.deaths }}
+                  </p>
+                  <p class="title red--text font-weight-black pl-4"
+                  v-if="sumOfDeathsByRegiao != 0">
+                    {{sumOfDeathsByRegiao}}
+                    </p>
+                </v-col>
+              </v-expand-x-transition>
+            </v-row>
+          </v-card-text>
         </div>
-        
-        
       </v-card>
     </v-row>
-    </v-col>
   </v-container>
 </template>
 
@@ -130,7 +158,7 @@ export default {
     this.getStates();
     this.getBrazilCases();
     this.getRegioes();
-    this.mapUrl = 'https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?intrarregiao=UF'
+    this.mapUrl = 'https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?intrarregiao=UF';
   },
 
   watch: {
@@ -145,7 +173,7 @@ export default {
     },
     RegiaoCases() {
       this.sumCases();
-    }
+    },
   },
   methods: {
     // gets all the 27 brazilian states by order
@@ -166,7 +194,7 @@ export default {
         .then((response) => {
           this.covid = response.data.data;
         });
-        this.expand = true
+      this.expand = true;
     },
     // gets the brazilian states cases selected by select
     getCovid(sigla) {
@@ -176,9 +204,9 @@ export default {
         .get(url)
         .then((response) => {
           this.covidState = response.data;
-        }).finally( setTimeout(() => this.expand = true, 500));
-        this.sumOfCasesByRegiao = 0;
-        this.sumOfDeathsByRegiao = 0;
+        }).finally(setTimeout(() => this.expand = true, 500));
+      this.sumOfCasesByRegiao = 0;
+      this.sumOfDeathsByRegiao = 0;
     },
 
     // gets the selected state map info from IBGE
@@ -189,7 +217,7 @@ export default {
         .then((response) => {
           this.map = response;
         });
-        this.title = this.stateValueObj.nome;
+      this.title = this.stateValueObj.nome;
     },
 
     // generates the url map that will be rendered by img
@@ -219,7 +247,6 @@ export default {
           this.RegiaoDeaths = [];
           this.statesOfRegiao = response.data;
           for (let i = 0; i < this.statesOfRegiao.length; i++) {
-            let sum = [];
             axios
               .get(`https://covid19-brazil-api.now.sh/api/report/v1/brazil/uf/${this.statesOfRegiao[i].sigla}`)
               .then((r) => {
@@ -229,7 +256,7 @@ export default {
                 this.RegiaoDeaths.push(sumDeaths);
               });
           }
-        }).finally( setTimeout(() => this.expand = true, 500));;
+        }).finally(setTimeout(() => this.expand = true, 500));
       // this.stateValueObj = '';
       const urlMap = `http://servicodados.ibge.gov.br/api/v3/malhas/regioes/${this.regiaoValueObj.id}?intrarregiao=UF`;
       this.mapUrl = urlMap;
@@ -245,7 +272,7 @@ export default {
       this.sumOfCasesByRegiao = totalCases;
       this.sumOfDeathsByRegiao = totalDeaths;
     },
-    
+
   },
 };
 </script>
@@ -257,7 +284,6 @@ export default {
 #map {
   position: relative;
   display: inline-block;
-  
 }
 #card-img {
   position: relative;
