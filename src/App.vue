@@ -1,43 +1,24 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
+     <div>
+    <v-toolbar
       dark
+      prominent
+      src="./static/coronavirus-4.jpg"
     >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
+      <v-toolbar-title>Covid19 Informa</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+      <v-btn icon>
+        <v-icon>mdi-export</v-icon>
       </v-btn>
-    </v-app-bar>
+    </v-toolbar>
+  </div>
 
-    <v-main>
+    <v-main class="teal darken-3">
       <HelloWorld/>
     </v-main>
   </v-app>

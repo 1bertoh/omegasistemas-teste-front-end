@@ -4,8 +4,8 @@
     <v-row class="text-center">
       <v-col cols="12">
         <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
+          src="./static/corona-icon.png"
+          class="my-"
           contain
           height="200"
         />
@@ -16,6 +16,7 @@
       <v-col
       class="col-12 col-sm-6">
         <v-select
+          dark
           :items="regioes"
           v-model="regiaoValueObj"
           label="Região"
@@ -28,6 +29,8 @@
       <v-col
       class="col-12 col-sm-6">
         <v-select
+        dark
+          class=""
           :items="states"
           v-model="stateValueObj"
           label="Estado"
@@ -36,12 +39,14 @@
         >
         </v-select>
       </v-col>
-      
     </v-row>
-    <v-row class="d-flex justify-center">
 
-      <v-card>
-        <v-card-title primary-title>
+    <v-row class="d-flex justify-center">
+      <v-card
+      class="teal lighten-4">
+        <v-card-title dark class="teal darken-4 white--text text-h3"
+        primary-title>
+        
           {{title}}
         </v-card-title>
 
@@ -51,12 +56,12 @@
       <v-card-text>
         <v-row>
           <v-col cols="12" class="d-flex justify-center"
-          v-if="covidState === '' && ReggiaoCases === []">
+          v-if="covidState === '' && RegiaoCases.length === 0">
             <p class="sm-display-1 display-2 font-weight-black red--text">Confirmados {{covid.confirmed}}</p>
           </v-col>
 
           <v-col>
-            <p class="title">Casos</p>
+            <p class="title pink">Casos</p>
             <p v-if="covidState ==='' && sumOfCasesByRegiao === 0">{{covid.cases}}</p>
             <p v-if="sumOfCasesByRegiao === 0">{{covidState.cases}}</p>
             <p v-if="sumOfCasesByRegiao != 0"> {{sumOfCasesByRegiao}}</p>
@@ -69,12 +74,10 @@
             <p v-if="sumOfDeathsByRegiao != 0">{{sumOfDeathsByRegiao}} </p>
           </v-col>
         </v-row>
-        
       </v-card-text>
       </v-card>
-      
     </v-row>
-    
+
   </v-container>
 </template>
 
@@ -223,4 +226,7 @@ export default {
 </script>
 
 <style lang="">
+.v-select__slot {
+  background-color:#017371;
+}
 </style>
