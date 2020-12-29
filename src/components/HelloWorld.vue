@@ -36,6 +36,8 @@
         >
         </v-select>
       </v-col>
+      <img :src="mapUrl" alt="" :srcset="map.data">
+      {{map.data}}
     </v-row>
   </v-container>
 </template>
@@ -54,16 +56,19 @@ export default {
     cityValueObj: '',
     citiesName: [],
     covid: '',
+    map: '',
+    mapUrl: '',
   }),
   mounted() {
     this.getStates();
-
     this.getBrazilCases();
+    this.getMap();
   },
 
   watch: {
     stateValueObj() {
       this.getCity();
+      this.getMapUrl(this.stateValueObj.id)
     },
     cityValueObj() {
       this.getCovid();
@@ -100,7 +105,6 @@ export default {
     },
 
     getCovid() {
-      alert('oi');
       const url = `https://covid19-brazil-api.now.sh/api/report/v1/brazil/uf/${this.stateValueObj.sigla}`;
       axios
         .get(url)
@@ -108,6 +112,18 @@ export default {
           this.covid = response.data;
         });
     },
+    getMap() {
+      const url = 'https://servicodados.ibge.gov.br/api/v3/malhas/estados/33';
+      axios
+        .get(url)
+        .then((response) => {
+          this.map = response;
+        });
+    },
+    getMapUrl(state) {
+      const url = `https://servicodados.ibge.gov.br/api/v3/malhas/estados/${state}`;
+      this.mapUrl = url;
+    }
   },
 };
 </script>
