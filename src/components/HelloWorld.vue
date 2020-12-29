@@ -22,6 +22,7 @@
           label="Região"
           item-text="nome"
           return-object
+          @input="alert('oi')"
         >
         </v-select>
       </v-col>
@@ -42,42 +43,62 @@
     </v-row>
 
     <v-row class="d-flex justify-center">
-      <v-card
-      class="teal lighten-4">
+      <v-card id="card-img"
+      class="teal lighten-4 mb-3">
         <v-card-title dark class="teal darken-4 white--text text-h3"
         primary-title>
         
           {{title}}
         </v-card-title>
 
-        <v-img :src="mapUrl" id="map" max-width="500px"
-      class="" alt="" srcset=""></v-img>
+        <div id="cont">
+          <v-img :src="mapUrl" id="map"
+          class="" alt="" srcset="">
+            <v-col cols="12" id="text3" class="d-flex justify-center"
+              v-if="covidState === '' && RegiaoCases.length === 0">
+              <p class="hidden-xs-only display-2 font-weight-black red--text">Confirmados {{covid.confirmed}}</p>
+              <p class="hidden-sm-and-up text-h5 font-weight-black red--text " id="text4">Confirmados {{covid.confirmed}}</p>
+            </v-col>
+          </v-img>
 
-      <v-card-text>
+      <v-card-text class="teal lighten-1 mt-3" style="height:12px">
+        <v-card class="teal darken-4 pb-2" style="height:15px">
+          
+        </v-card>
         <v-row>
-          <v-col cols="12" class="d-flex justify-center"
-          v-if="covidState === '' && RegiaoCases.length === 0">
-            <p class="sm-display-1 display-2 font-weight-black red--text">Confirmados {{covid.confirmed}}</p>
+          <v-expand-x-transition>
+          <v-col id="text1"
+           v-show="expand"
+          height="100"
+          width="100"
+          class="mx-auto ">
+            <p class="title teal darken-4 white--text pl-4">Casos</p>
+            <p class="title red--text font-weight-black pl-4" v-if="covidState ==='' && sumOfCasesByRegiao === 0">{{covid.cases}}</p>
+            <p class="title red--text font-weight-black pl-4" v-if="sumOfCasesByRegiao === 0">{{covidState.cases}}</p>
+            <p class="title red--text font-weight-black pl-4" v-if="sumOfCasesByRegiao != 0"> {{sumOfCasesByRegiao}}</p>
           </v-col>
+          </v-expand-x-transition>
 
-          <v-col>
-            <p class="title pink">Casos</p>
-            <p v-if="covidState ==='' && sumOfCasesByRegiao === 0">{{covid.cases}}</p>
-            <p v-if="sumOfCasesByRegiao === 0">{{covidState.cases}}</p>
-            <p v-if="sumOfCasesByRegiao != 0"> {{sumOfCasesByRegiao}}</p>
+          <v-expand-x-transition>
+          <v-col id="text2"
+          v-show="expand"
+          height="100"
+          width="100"
+          class="mx-auto ">
+            <p class="title teal darken-4 white--text pl-4" >Mortes</p>
+            <p class="title red--text font-weight-black pl-4" v-if="covidState === '' && sumOfCasesByRegiao === 0">{{covid.deaths}}</p>
+            <p class="title red--text font-weight-black pl-4" v-if="sumOfDeathsByRegiao === 0">{{covidState.deaths }}</p>
+            <p class="title red--text font-weight-black pl-4" v-if="sumOfDeathsByRegiao != 0">{{sumOfDeathsByRegiao}} </p>
           </v-col>
-
-          <v-col>
-            <p class="title">Mortes</p>
-            <p v-if="covidState === '' && sumOfCasesByRegiao === 0">{{covid.deaths}}</p>
-            <p v-if="sumOfDeathsByRegiao === 0">{{covidState.deaths }}</p>
-            <p v-if="sumOfDeathsByRegiao != 0">{{sumOfDeathsByRegiao}} </p>
-          </v-col>
-        </v-row>
-      </v-card-text>
+          </v-expand-x-transition>
+          </v-row>
+        </v-card-text>
+        </div>
+        
+        
       </v-card>
     </v-row>
-
+    </v-col>
   </v-container>
 </template>
 
@@ -103,6 +124,7 @@ export default {
     sumOfCasesByRegiao: 0,
     sumOfDeathsByRegiao: 0,
     title: 'Brasil',
+    expand: false,
   }),
   mounted() {
     this.getStates();
@@ -115,7 +137,7 @@ export default {
     stateValueObj() {
       this.getMapUrl(this.stateValueObj.id);
       this.getCovid(this.stateValueObj.sigla);
-      this.getMapInfo(this.stateValueObj.id)
+      this.getMapInfo(this.stateValueObj.id);
     },
     regiaoValueObj() {
       this.getStatesofRegiao(this.regiaoValueObj.id);
@@ -144,15 +166,17 @@ export default {
         .then((response) => {
           this.covid = response.data.data;
         });
+        this.expand = true
     },
     // gets the brazilian states cases selected by select
     getCovid(sigla) {
+      this.expand = false;
       const url = `https://covid19-brazil-api.now.sh/api/report/v1/brazil/uf/${sigla}`;
       axios
         .get(url)
         .then((response) => {
           this.covidState = response.data;
-        });
+        }).finally( setTimeout(() => this.expand = true, 500));
         this.sumOfCasesByRegiao = 0;
         this.sumOfDeathsByRegiao = 0;
     },
@@ -186,6 +210,7 @@ export default {
 
     // gets all the states from the regiao selected
     getStatesofRegiao(Id) {
+      this.expand = false;
       const url = `https://servicodados.ibge.gov.br/api/v1/localidades/regioes/${Id}/estados`;
       axios
         .get(url)
@@ -204,7 +229,7 @@ export default {
                 this.RegiaoDeaths.push(sumDeaths);
               });
           }
-        });
+        }).finally( setTimeout(() => this.expand = true, 500));;
       // this.stateValueObj = '';
       const urlMap = `http://servicodados.ibge.gov.br/api/v3/malhas/regioes/${this.regiaoValueObj.id}?intrarregiao=UF`;
       this.mapUrl = urlMap;
@@ -219,7 +244,7 @@ export default {
       }
       this.sumOfCasesByRegiao = totalCases;
       this.sumOfDeathsByRegiao = totalDeaths;
-}
+    },
     
   },
 };
@@ -228,5 +253,42 @@ export default {
 <style lang="">
 .v-select__slot {
   background-color:#017371;
+}
+#map {
+  position: relative;
+  display: inline-block;
+  
+}
+#card-img {
+  position: relative;
+  display: inline-block;
+  width: 80%;
+}
+#text1 {
+  position: absolute;
+  top: 20%;
+  width: 13em;
+  right: 0%;
+}
+#text2 {
+  position: absolute;
+  top: 40%;
+  width: 13em;
+  right: 0%;
+}
+#text3 {
+  position: absolute;
+  top: 35%;
+  width: 13em;
+  right: 35%;
+}
+#text4 {
+  position: absolute;
+  top: 0%;
+  width: 10em;
+  right:-20%;
+}
+.title {
+  border-radius: 15px 15px 0 0px ;
 }
 </style>
